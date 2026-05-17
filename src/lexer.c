@@ -6,6 +6,7 @@
 
 // keywords
 static const char *keywords[] = {
+    // PY ones
     "False", "class", "from", "or",
     "None", "continue", "global", "pass",
     "True", "def", "if", "raise",
@@ -14,9 +15,55 @@ static const char *keywords[] = {
     "assert", "else", "is", "while",
     "async", "except", "lambda", "with",
     "await", "finally", "nonlocal", "yeild",
-    "break", "for", "not", NULL};
+    "break", "for", "not",
+    // C ones
+    // i think thats all
+    "alignas",
+    "alignof",
+    "bool",
+    "break",
+    "case",
+    "char",
+    "const",
+    "constexpr",
+    "continue",
+    "default",
+    "do",
+    "double",
+    "else",
+    "enum",
+    "extern",
+    "false",
+    "float",
+    "for",
+    "if",
+    "inline",
+    "int",
+    "long",
+    "nullptr",
+    "restrict",
+    "return",
+    "short",
+    "signed",
+    "sizeof",
+    "static",
+    "static_assert",
+    "struct",
+    "switch",
+    "thread_local",
+    "true",
+    "typedef",
+    "typeof",
+    "typeof_unqual",
+    "union",
+    "unsigned",
+    "void",
+    "volatile",
+    "while",
+    NULL};
 
-static int is_keyword(char *word)
+static int
+is_keyword(char *word)
 {
     for (int counter = 0; keywords[counter] != NULL; counter++)
         if (strcmp(word, keywords[counter]) == 0)
