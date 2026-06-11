@@ -1,0 +1,11 @@
+// hello world example
+
+// below is func def that can ONLY return type int
+int main()
+{
+    // u can use single or dbl qouutatuion marks
+    print('hello world!')
+    return 0 //no err
+}
+
+
