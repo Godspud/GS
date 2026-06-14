@@ -1,0 +1,140 @@
+// var assignment
+int main()
+{
+    x = 5; // will auto assign to int it is optional to add the type this is of type any
+    // then u can reassign with
+    x = 'hi';
+    // but if u do 
+    int x = 5;
+    // then u cannot do
+    x = 'hi';
+    // or
+    char x[2] = 'hi';
+    //or
+    str x = 'hi';
+    // cos it is now ALWAYS forced to be a int
+
+    // then
+    x = 5
+    x = 3.14 
+    // allawed cos any type can be reassigned to any other type
+
+    x = 5
+    y = x + 1 
+    // y is a int as int + int is int
+
+    x = 5
+    x = "hi"
+    z = x + 1 
+    // error cos str cannot add with a int
+
+    // type casting
+    (typename)varname
+    // so like using both syntaxs
+    x = 5;
+    x = (str)x;
+    // or 
+    x = (char)x;
+
+    // then
+    int x = 5;
+    x = (str)x;
+    // or
+    y = (char)x; // NOTE: WILL NOT ERROR COS ASSIGN TO SOMEONE else
+    x = (char)x; // ERROR CANNOT assign
+}
+
+// math
+int main()
+{
+    result = x + y * 2
+    // turns to 
+    result = x + (y * 2)
+    // same with 
+    int result = x + y * 2
+}
+
+//if
+int main()
+{
+    int x = (int)input();
+    if (x == "1") // nvr trigger cos they not same type
+    {
+        print("x is 1!");
+    }
+    elif (x === 1) // will error
+    {
+        ; // same as pass
+    }
+    else
+    {
+        print("l")
+    }
+
+}
+
+// loops
+int main()
+{
+    // while loop
+    x = 1;
+    y = "x";
+    while (x) // implied truth any non 0 is true like c
+    {
+        if (x == 1 && y == "y")
+        {
+            x = False;
+        }
+        y = (str)input();
+    }
+
+    // for loop
+    strs = ["hi", "me 2nd index!", "HIYAHHHH"]
+    for (str strobj in strs)
+    {
+        print(strobj);
+    }
+}
+
+//funcs
+int main()
+{
+    // func declare
+    //def typename funcname(input args)
+
+    //so
+    def int add(int a, int b)
+    {
+        return a + b;
+    }
+    // or
+    def add(a, int b);
+    // a is a any type and add can return any type
+    {
+        return a + b;
+        // can error cos cannot add str and int
+        // or list and int
+    }
+
+    //default args
+    def int add(int a, int b=1);
+    // if nothing is passed b will be 1
+    {
+        return a+b;
+    }
+
+    // then nested func calls
+    def int times(int a, int b)
+    {
+        return a * b;
+    }
+    def int add(int a, int b)
+    {
+        reutrn a + b;
+    }
+    print(times(5 , add(2 ,4)));
+    // will eval to
+    int temp = add(2, 4);
+    int temp = times(5 , temp);
+    print(temp);
+}

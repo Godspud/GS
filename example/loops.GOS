@@ -14,8 +14,8 @@ int main()
 
     // for loop
     strs = ["hi", "me 2nd index!", "HIYAHHHH"]
-    for (str str in strs)
+    for (str strobj in strs)
     {
-        print(x);
+        print(strobj);
     }
 }
