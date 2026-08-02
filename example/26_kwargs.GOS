@@ -1,0 +1,30 @@
+// basic keyword args for plain functions
+def str greet(str name, str greeting = "hello") {
+    return greeting + ", " + name;
+}
+print(greet(name="Sam"));
+print(greet(name="Sam", greeting="hi"));
+print(greet(greeting="yo", name="Alex"));
+print(greet("Bob"));
+print(greet("Bob", "sup"));
+
+// **kwargs collecting leftover keyword args into a dict
+def void show_opts(str label, **opts) {
+    print(label);
+    print(len(opts));
+    print("x" in opts);
+}
+show_opts("test1", x=1, y=2, z=3);
+show_opts("test2");
+
+// constructor with keyword args
+class Point {
+    def __init__(self, int x, int y = 0) {
+        self.x = x;
+        self.y = y;
+    }
+}
+Point p1 = Point(x=5, y=10);
+Point p2 = Point(x=3);
+print(p1.x); print(p1.y);
+print(p2.x); print(p2.y);

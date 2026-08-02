@@ -1,0 +1,39 @@
+class Animal {
+    def __init__(self) {
+        self.name = "creature";
+        self.legs = 4;
+    }
+
+    def speak(self) {
+        print(f"{self.name} says something");
+    }
+
+    def str describe(self) {
+        return f"{self.name} has {self.legs} legs";
+    }
+}
+
+// class (Parent)Child -- parent name goes in parens, before the child's name.
+class (Animal)Dog {
+    def __init__(self) {
+        Animal.__init__(self);
+    }
+
+    // Overriding speak(): Dog's own version is used instead of Animal's.
+    def speak(self) {
+        print(f"{self.name} says Woof!");
+    }
+
+    def bark_times(self, int times) {
+        for (i in range(times)) {
+            print(f"Woof #{i}");
+        }
+    }
+}
+
+Dog d = Dog();
+d.name = "Rex";
+d.legs = 4;
+d.speak();          // Dog's override runs.
+d.bark_times(3);
+print(d.describe()); // Not overridden -> falls back to Animal's describe().

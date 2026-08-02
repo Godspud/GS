@@ -1,0 +1,5 @@
+// The simplest possible Guavascript program.
+print("Hello, world!");
+
+// print() accepts multiple arguments, space-separated, like Python.
+print("The answer is", 42);

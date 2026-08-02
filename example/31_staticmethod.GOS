@@ -1,0 +1,61 @@
+class MathUtils {
+    @staticmethod
+    def int square(int x) {
+        return x * x;
+    }
+
+    @staticmethod
+    def int add(int a, int b) {
+        return a + b;
+    }
+
+    def int instance_method(self, int x) {
+        return x + 1;
+    }
+}
+
+// called via ClassName.method(args) -- the unbound style
+print(MathUtils.square(5));
+print(MathUtils.add(3, 4));
+
+// called via instance.method(args) -- same static method, no receiver passed
+MathUtils m = MathUtils();
+print(m.square(6));
+print(m.add(10, 20));
+
+// mixing static and instance methods on the same instance
+print(m.instance_method(41));
+
+class (MathUtils)ExtendedMath {
+    @staticmethod
+    def int cube(int x) {
+        return x * x * x;
+    }
+}
+
+// inherited static method, called both ways
+print(ExtendedMath.square(7));
+ExtendedMath e = ExtendedMath();
+print(e.square(8));
+print(e.cube(3));
+print(ExtendedMath.cube(4));
+
+// static method through 'any'-typed dynamic dispatch
+any a = MathUtils();
+print(a.square(9));
+print(a.add(1, 2));
+
+any ext = ExtendedMath();
+print(ext.cube(5));
+print(ext.square(10));
+
+// side-effect preservation: calling a static method off a side-effecting
+// expression should still run that expression, even though its result
+// isn't passed anywhere
+int counter = 0;
+def MathUtils bump() {
+    counter = counter + 1;
+    return MathUtils();
+}
+print(bump().square(2));
+print(counter);

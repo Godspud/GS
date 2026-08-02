@@ -1,0 +1,38 @@
+// Constructors previously forwarded call args 1:1 with no *args/**kwargs
+// packing at all -- this broke the instant a constructor declared *args,
+// even with no **kwargs involved. Fixed alongside the plain-function-call
+// *args+**kwargs combo fix, both now share the same codegen helper.
+
+class Bag {
+    def __init__(self, str label, *items) {
+        self.label = label;
+        self.items = items;
+    }
+}
+Bag b1 = Bag("empty");
+Bag b2 = Bag("mybag", 1, 2, 3);
+print(b1.label);
+print(len(b1.items));
+print(b2.label);
+print(len(b2.items));
+print(b2.items[0]);
+print(b2.items[2]);
+
+class Profile {
+    def __init__(self, str name, *tags, **info) {
+        self.name = name;
+        self.tags = tags;
+        self.info = info;
+    }
+}
+Profile p1 = Profile("basic");
+Profile p2 = Profile("full", "admin", "verified", role="lead", team="core");
+print(p1.name);
+print(len(p1.tags));
+print(len(p1.info));
+print(p2.name);
+print(len(p2.tags));
+print(p2.tags[0]);
+print(p2.tags[1]);
+print(p2.info["role"]);
+print(p2.info["team"]);

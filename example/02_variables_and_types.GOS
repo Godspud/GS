@@ -1,0 +1,39 @@
+// Locked types: once declared, the type can never change.
+int age = 30;
+float price = 19.99;
+str name = "Ada";
+bool active = True;
+
+print(name, "is", age, "years old, active:", active);
+
+// const: write-once, no reassignment ever allowed.
+const pi = 3.14159;
+print(f"pi is approximately {pi}");
+
+// 'any': untyped, can be reassigned to any type freely.
+any thing = 42;
+print(f"thing is {thing}");
+thing = "now it's a string";
+print(f"thing is {thing}");
+thing = 3.14;
+print(f"thing is {thing}");
+
+// Casting: (typename)expr. Casting a locked variable requires
+// assigning the result to a new variable (the original stays locked).
+int whole = 7;
+float as_float = (float)whole;
+print(f"{whole} as a float is {as_float}");
+
+str number_text = "123";
+int parsed = (int)number_text;
+print(f"parsed '{number_text}' as int: {parsed}");
+
+// Arithmetic promotion: int+int->int, int+float->float.
+int a = 5;
+float b = 2.5;
+float sum = a + b;
+print(f"5 + 2.5 = {sum}");
+
+// String concatenation with '+'.
+str greeting = "Hello, " + name + "!";
+print(greeting);

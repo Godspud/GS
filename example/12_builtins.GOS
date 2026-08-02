@@ -1,0 +1,32 @@
+// abs() -- works on int or float, and on 'any' too.
+int neg = -7;
+print(f"abs(-7) = {abs(neg)}");
+
+// min()/max() -- variadic (2+ args); works on numbers or strings.
+print(f"min(3, 9, 1) = {min(3, 9, 1)}");
+print(f"max(3, 9, 1) = {max(3, 9, 1)}");
+str first = "banana";
+str second = "apple";
+print(f"min of two strings = {min(first, second)}");
+
+// pow()/sqrt() -- always return float.
+print(f"2^10 = {pow(2, 10)}");
+print(f"sqrt(16) = {sqrt(16)}");
+
+// round() -- always returns int.
+float value = 3.7;
+print(f"round(3.7) = {round(value)}");
+
+// chr()/ord() -- character <-> code point.
+print(f"chr(65) = {chr(65)}");
+print(f"ord('A') = {ord('A')}");
+
+// sorted() -- returns a new, ascending-sorted list.
+list nums = [5, 1, 4, 2, 3];
+list ordered = sorted(nums);
+for (n in ordered) {
+    print(f"sorted: {n}");
+}
+
+// sum() -- sums a list's elements.
+print(f"sum([1,2,3,4,5]) = {sum([1, 2, 3, 4, 5])}");

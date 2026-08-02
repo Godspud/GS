@@ -1,0 +1,22 @@
+with open("/tmp/with_test_file.txt", "w") as f {
+    write(f, "hello\n");
+    write(f, "world\n");
+}
+
+with open("/tmp/with_test_file.txt", "r") as f {
+    while (not eof(f)) {
+        str line = read_line(f);
+        print(line);
+    }
+}
+print("done");
+
+// verify cleanup happens even when body raises
+try {
+    with open("/tmp/with_test_file.txt", "r") as f2 {
+        raise "boom";
+    }
+} except e {
+    print(f"caught: {e}");
+}
+print("still running after exception during with");

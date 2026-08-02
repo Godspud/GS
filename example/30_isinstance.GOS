@@ -1,0 +1,68 @@
+class Animal {
+    def __init__(self, str name) {
+        self.name = name;
+    }
+    def speak(self) {
+        return "...";
+    }
+}
+
+class (Animal)Dog {
+    def speak(self) {
+        return "Woof";
+    }
+}
+
+class (Animal)Cat {
+    def speak(self) {
+        return "Meow";
+    }
+}
+
+class (Dog)Puppy {
+}
+
+Dog d = Dog("Rex");
+Cat c = Cat("Tom");
+Puppy p = Puppy("Spot");
+
+// statically-typed class values
+print(isinstance(d, Dog));      // True
+print(isinstance(d, Animal));   // True (base class)
+print(isinstance(d, Cat));      // False (unrelated)
+print(isinstance(p, Dog));      // True (Puppy extends Dog)
+print(isinstance(p, Animal));   // True (grandparent)
+print(isinstance(d, Puppy));    // False (d isn't a Puppy, wrong direction)
+
+// any-typed values holding objects
+any a1 = Dog("AnyRex");
+any a2 = Cat("AnyTom");
+print(isinstance(a1, Dog));     // True
+print(isinstance(a1, Animal));  // True
+print(isinstance(a1, Cat));     // False
+print(isinstance(a2, Animal));  // True
+print(isinstance(a2, Dog));     // False
+
+// any-typed value NOT holding an object at all
+any a3 = 42;
+print(isinstance(a3, Dog));     // False, no crash
+
+// statically non-object types -- always False, no error
+int n = 5;
+str s = "hi";
+print(isinstance(n, Dog));      // False
+print(isinstance(s, Animal));   // False
+
+// isinstance used in a real conditional
+def str describe(any x) {
+    if (isinstance(x, Dog)) {
+        return "it's a dog";
+    } elif (isinstance(x, Animal)) {
+        return "it's some animal";
+    } else {
+        return "not an animal";
+    }
+}
+print(describe(a1));
+print(describe(a2));
+print(describe(a3));

@@ -1,0 +1,35 @@
+tuple t = (1, 2, 3);
+print(t[0]);
+print(t[1]);
+print(t[2]);
+print(len(t));
+
+int x = (5 + 3) * 2;
+print(x);
+tuple single = (7,);
+print(len(single));
+print(single[0]);
+tuple empty = ();
+print(len(empty));
+
+print(2 in t);
+print(9 in t);
+
+int total = 0;
+for (v in t) {
+    total += v;
+}
+print(total);
+
+tuple a = (3, 4);
+tuple b = (3, 4);
+print(a == b);
+tuple c = (3, 5);
+print(a == c);
+
+dict positions = {};
+positions[(1, 2)] = "start";
+positions[(3, 4)] = "end";
+print(positions[(1, 2)]);
+print((1, 2) in positions);
+print((9, 9) in positions);

@@ -1,8 +1,0 @@
-int main()
-{
-    result = x + y * 2
-    // turns to 
-    result = x + (y * 2)
-    // same with 
-    int result = x + y * 2
-}

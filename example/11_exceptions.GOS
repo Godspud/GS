@@ -1,0 +1,27 @@
+// try/except catches runtime errors raised by the runtime library --
+// e.g. list index out of range, dict key not found, division by zero.
+list numbers = [1, 2, 3];
+
+try {
+    print(numbers[10]);
+} except e {
+    print("caught an error indexing the list");
+}
+
+dict ages = {"alice": 30};
+try {
+    print(ages["nobody"]);
+} except e {
+    print("caught an error: key not found");
+}
+
+// Code after a caught exception continues normally.
+print("still running after the try/except blocks");
+
+// A try block that succeeds just runs straight through, except never fires.
+try {
+    int safe = numbers[0];
+    print(f"safely got {safe}");
+} except e {
+    print("this won't print");
+}

@@ -1,0 +1,29 @@
+def int doubler(int x) {
+    return x * 2;
+}
+
+if ((n := doubler(5)) > 5) {
+    print(n);
+}
+
+int i = 0;
+list results = [];
+while ((v := i * i) < 50) {
+    results.append(v);
+    i += 1;
+}
+print(len(results));
+print(results[0]);
+print(results[len(results)-1]);
+
+y := 42;
+print(y);
+
+if ((z := doubler(3)) == 6) {
+    print("matched");
+    print(z);
+} elif ((z := doubler(10)) == 6) {
+    print("never");
+} else {
+    print("else");
+}

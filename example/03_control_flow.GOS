@@ -1,0 +1,35 @@
+int temperature = 75;
+
+if (temperature > 90) {
+    print("It's scorching!");
+} elif (temperature > 70) {
+    print("It's warm.");
+} elif (temperature > 50) {
+    print("It's mild.");
+} else {
+    print("It's cold.");
+}
+
+// Python-style chained comparisons: 0 < x < 10 means (0 < x) and (x < 10).
+int x = 5;
+if (0 < x < 10) {
+    print(f"{x} is between 0 and 10");
+}
+
+// and/or/not or the C spellings &&/||/! -- fully interchangeable.
+bool sunny = True;
+bool warm = False;
+if (sunny and not warm) {
+    print("Sunny but not warm.");
+}
+if (sunny || warm) {
+    print("At least one of sunny/warm is true.");
+}
+if (sunny && !warm) {
+    print("Same check, C spelling this time.");
+}
+
+// C-style ternary: cond ? true_value : false_value.
+int score = 82;
+str grade = score >= 60 ? "pass" : "fail";
+print(f"score {score} -> {grade}");

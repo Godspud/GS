@@ -1,0 +1,55 @@
+class Animal {
+    def __init__(self, str name) {
+        self.name = name;
+    }
+    def str greet(self) {
+        return "hi, I'm " + self.name;
+    }
+    def int add(self, int a, int b) {
+        return a + b;
+    }
+}
+class (Animal)Dog {
+    def bark(self) {
+        print("woof from " + self.name);
+    }
+}
+class Cat {
+    def __init__(self) {
+        self.name = "cat";
+    }
+    def void bark(self) {
+        print("meow (impersonating a bark)");
+    }
+}
+
+// switching which class gets assigned at runtime
+any x = Dog("Rex");
+x.bark();
+any y = Cat();
+y.bark();
+
+// inherited method (bark's greet comes from Animal, not overridden in Dog)
+any z = Dog("Fido");
+print(z.greet());
+
+// method with args and a return value
+any w = Dog("Buddy");
+print(w.add(3, 4));
+
+// list of mixed any-typed class instances -- the exact case from earlier this session
+list animals = [];
+animals.append(Dog("A"));
+animals.append(Cat());
+animals.append(Dog("B"));
+for (a in animals) {
+    a.bark();
+}
+
+// error case: calling a method that doesn't exist on that class
+any bad = Cat();
+try {
+    bad.add(1, 2);
+} except e {
+    print(f"caught: {e}");
+}

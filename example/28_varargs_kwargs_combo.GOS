@@ -1,0 +1,42 @@
+def summarize(str label, *rest, **opts) {
+    print(label);
+    print("rest count:");
+    print(len(rest));
+    int i = 0;
+    while (i < len(rest)) {
+        print(rest[i]);
+        i = i + 1;
+    }
+    if ("verbose" in opts) {
+        print("verbose:");
+        print(opts["verbose"]);
+    }
+    if ("tag" in opts) {
+        print("tag:");
+        print(opts["tag"]);
+    }
+}
+
+// no extras at all
+summarize("basic");
+
+// *args overflow only
+summarize("with-rest", 1, 2, 3);
+
+// **kwargs only
+summarize("with-kw", verbose=True, tag="x");
+
+// both *args overflow AND **kwargs together -- this is the combo that was broken
+summarize("combo", 10, 20, verbose=False, tag="y");
+
+def add_all(*nums) {
+    int total = 0;
+    int i = 0;
+    while (i < len(nums)) {
+        total = total + nums[i];
+        i = i + 1;
+    }
+    return total;
+}
+print("sum:");
+print(add_all(1, 2, 3, 4, 5));

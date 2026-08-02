@@ -1,0 +1,30 @@
+// open(path, mode) returns a file handle; mode is the same as C's
+// fopen ("r", "w", "a", ...).
+any out_file = open("/tmp/gs_example_output.txt", "w");
+write(out_file, "first line\n");
+write(out_file, "second line\n");
+close(out_file);
+print("wrote a file");
+
+// read() returns the entire remaining contents as one str.
+any in_file = open("/tmp/gs_example_output.txt", "r");
+str contents = read(in_file);
+close(in_file);
+print(f"whole file:\n{contents}");
+
+// read_line() reads one line at a time; eof() checks for end of file.
+any line_file = open("/tmp/gs_example_output.txt", "r");
+while (!eof(line_file)) {
+    str line = read_line(line_file);
+    if (line != "") {
+        print(f"line: {line}");
+    }
+}
+close(line_file);
+
+// opening a file that doesn't exist raises, same as any other runtime error.
+try {
+    any missing = open("/tmp/gs_this_should_not_exist.txt", "r");
+} except e {
+    print(f"caught: {e}");
+}

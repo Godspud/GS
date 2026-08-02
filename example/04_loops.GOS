@@ -1,0 +1,38 @@
+// for (x in range(n)) -> compiles straight to a native C for-loop.
+for (i in range(5)) {
+    print(f"i = {i}");
+}
+
+// range(start, stop) and range(start, stop, step) are also supported.
+for (i in range(2, 10, 2)) {
+    print(f"even: {i}");
+}
+
+// for (item in <collection>) iterates a list, set, or string.
+list fruits = ["apple", "banana", "cherry"];
+for (fruit in fruits) {
+    print(f"fruit: {fruit}");
+}
+
+// while loop with break/continue.
+int count = 0;
+while (count < 10) {
+    count += 1;
+    if (count == 3) {
+        continue;
+    }
+    if (count == 7) {
+        break;
+    }
+    print(f"count is {count}");
+}
+
+// Building a list with append(), then iterating it.
+list squares = [];
+for (i in range(1, 6)) {
+    squares.append(i * i);
+}
+print(f"there are {len(squares)} squares");
+for (s in squares) {
+    print(f"square: {s}");
+}

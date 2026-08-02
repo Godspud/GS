@@ -1,0 +1,33 @@
+str name = "Guavascript";
+int version = 1;
+
+// f-strings interpolate arbitrary expressions inside { }.
+print(f"Welcome to {name} v{version}!");
+print(f"1 + 1 = {1 + 1}");
+
+// String concatenation with '+'.
+str first = "Hello";
+str second = "World";
+str combined = first + ", " + second + "!";
+print(combined);
+
+// (typename)expr is the only conversion syntax -- there is no str()/
+// int()/float()/bool() function call form.
+int number = 7;
+str number_str = (str)number;
+print(f"the number as a string: '{number_str}'");
+
+// Comparing strings with == compares content, not identity.
+str a = "match";
+str b = "match";
+if (a == b) {
+    print("strings compare equal");
+}
+
+// f-strings can nest calls and multiple expressions.
+def str shout(str s) {
+    return s + "!!!";
+}
+str excitement = "exciting";
+str shouted = shout(excitement);
+print(f"{shouted} (len={len(shouted)})");

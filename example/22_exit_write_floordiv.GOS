@@ -1,0 +1,12 @@
+write("no");
+write(" newline");
+write(" here\n");
+
+print(floordiv(7, 2));
+print(floordiv(-7, 2));
+print(floordiv(7, -2));
+print(floordiv(-7, -2));
+
+print("before exit");
+exit(3);
+print("never printed");

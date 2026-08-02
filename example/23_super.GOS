@@ -1,0 +1,31 @@
+class Animal {
+    def __init__(self, str name, int legs = 4) {
+        self.name = name;
+        self.legs = legs;
+    }
+    def speak(self) {
+        print(f"{self.name} says something");
+    }
+}
+class (Animal)Dog {
+    def __init__(self, str name) {
+        super().__init__(name, 4);
+        self.breed = "unknown";
+    }
+    def speak(self) {
+        super().speak();
+        print(f"{self.name} says Woof!");
+    }
+}
+Dog d = Dog("Rex");
+d.speak();
+print(d.legs);
+
+// super() with default-arg forwarding
+class (Animal)Cat {
+    def __init__(self, str name) {
+        super().__init__(name);
+    }
+}
+Cat c = Cat("Whiskers");
+print(c.legs);

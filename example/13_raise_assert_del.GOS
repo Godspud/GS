@@ -1,0 +1,46 @@
+// raise: throws any value as an exception, catchable by try/except.
+def check_positive(int n) {
+    if (n < 0) {
+        raise "n must be positive";
+    }
+    print(f"{n} is positive");
+}
+
+try {
+    check_positive(5);
+    check_positive(-3);
+} except e {
+    print(f"caught: {e}");
+}
+
+// assert cond;  -- raises "assertion failed" if cond is false.
+// assert cond, message;  -- raises message instead.
+def int divide(int a, int b) {
+    assert b != 0, "cannot divide by zero";
+    return a / b;
+}
+
+try {
+    print(f"10 / 2 = {divide(10, 2)}");
+    print(f"10 / 0 = {divide(10, 0)}");
+} except e {
+    print(f"caught: {e}");
+}
+
+// del: removes a list element or dict entry (this is the only form
+// 'del' takes here -- deleting a bare variable isn't meaningful in a
+// compiled, stack-based language the way it is in Python).
+list fruits = ["apple", "banana", "cherry"];
+del fruits[1];
+print(f"fruits now has {len(fruits)} items");
+for (f in fruits) {
+    print(f"fruit: {f}");
+}
+
+dict ages = {"alice": 30, "bob": 25};
+del ages["bob"];
+if ("bob" in ages) {
+    print("this won't print");
+} else {
+    print("bob was removed");
+}

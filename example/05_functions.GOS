@@ -1,0 +1,46 @@
+def greet(str person) {
+    print(f"Hello, {person}!");
+}
+
+greet("World");
+
+// C-style: return type comes before the function name.
+def int add(int a, int b) {
+    return a + b;
+}
+
+int total = add(3, 4);
+print(f"3 + 4 = {total}");
+
+// No return type written -> defaults to 'any' (not void). A function
+// that falls through without an explicit 'return' implicitly returns
+// None, Python-style.
+def describe(thing) {
+    print(f"describe got: {thing}");
+}
+
+describe(42);
+describe("a string");
+describe(3.14);
+
+// Recursion works normally.
+def int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+print(f"5! = {factorial(5)}");
+
+// Default parameter values.
+def int power(int base, int exponent = 2) {
+    int result = 1;
+    for (i in range(exponent)) {
+        result = result * base;
+    }
+    return result;
+}
+
+print(f"3^2 = {power(3)}");
+print(f"2^5 = {power(2, 5)}");

@@ -1,0 +1,19 @@
+def int total(int base, *rest) {
+    int sum = base;
+    for (v in rest) {
+        sum += v;
+    }
+    return sum;
+}
+print(total(10));
+print(total(10, 1, 2, 3));
+print(total(10, 5));
+
+def void show_all(str label, *items) {
+    print(label);
+    for (v in items) {
+        print(v);
+    }
+}
+show_all("nums:", 1, 2, 3);
+show_all("empty:");

@@ -1,0 +1,34 @@
+// List: ordered, indexable, growable with append().
+list numbers = [10, 20, 30];
+numbers.append(40);
+print(f"numbers has {len(numbers)} items");
+for (n in numbers) {
+    print(f"number: {n}");
+}
+print(f"first number: {numbers[0]}");
+numbers[0] = 99;
+print(f"first number is now: {numbers[0]}");
+
+// Dict: key/value pairs. Indexing reads/writes; 'in' checks membership.
+dict ages = {"alice": 30, "bob": 25};
+str alice_key = "alice";
+print(f"alice is {ages[alice_key]}");
+ages["carol"] = 40;
+if ("carol" in ages) {
+    print("carol was added");
+}
+print(f"there are {len(ages)} people");
+
+// Set: unique unordered values, growable with add().
+set seen = {1, 2, 3};
+seen.add(3);  // already present -- no effect
+seen.add(4);
+print(f"set has {len(seen)} unique values");
+if (4 in seen) {
+    print("4 is in the set");
+}
+if (99 in seen) {
+    print("this won't print");
+} else {
+    print("99 is not in the set");
+}

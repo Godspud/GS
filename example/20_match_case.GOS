@@ -1,0 +1,40 @@
+def str classify(int n) {
+    match (n) {
+        case 1, 2, 3 {
+            return "small";
+        }
+        case 100 {
+            return "hundred";
+        }
+        default {
+            return "other";
+        }
+    }
+}
+print(classify(1));
+print(classify(2));
+print(classify(100));
+print(classify(50));
+
+// match on a string, any-typed subject
+str s = "hello";
+match (s) {
+    case "hi" {
+        print("greeting1");
+    }
+    case "hello" {
+        print("greeting2");
+    }
+    default {
+        print("unknown");
+    }
+}
+
+// match with no default, no case matches -> falls through silently
+int x = 999;
+match (x) {
+    case 1 {
+        print("one");
+    }
+}
+print("after match");

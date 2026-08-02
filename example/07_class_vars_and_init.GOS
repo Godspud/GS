@@ -1,0 +1,35 @@
+// Any variable declared directly in a class body -- typed or untyped --
+// is a class-level (shared) variable, accessed as ClassName.name from
+// anywhere. Instance fields are always implicit: only ever created by
+// assigning self.field inside a method (usually __init__).
+class Price {
+    int total_created = 0;   // typed class-level var
+
+    def __init__(self) {
+        self.unit = "USD";
+        self.amount = 0;
+        Price.total_created += 1;
+    }
+
+    def str describe(self) {
+        return f"{self.amount} {self.unit}";
+    }
+}
+
+// class (Price)Payment -- parent before the name, same as any other class.
+class (Price)Payment {
+    def __init__(self) {
+        // Unbound call, Python-style: calls the parent's __init__
+        // directly, passing self explicitly.
+        Price.__init__(self);
+        self.approved = False;
+    }
+}
+
+Price p1 = Price();
+Price p2 = Price();
+Payment pay = Payment();
+
+p1.amount = 42;
+print(p1.describe());
+print(f"total Price objects created: {Price.total_created}");

@@ -1,0 +1,39 @@
+// & takes an address, * dereferences -- plain C-style, available
+// anywhere, no special block or annotation needed.
+int x = 5;
+int* px = &x;
+*px = 42;
+print(f"x is now {x}");
+
+// Passing a pointer to a function lets it modify the caller's variable.
+def double_it(int* p) {
+    *p = *p * 2;
+}
+
+double_it(&x);
+print(f"x doubled is {x}");
+
+// 'x * y' (multiplication) and 'Foo* bar' (pointer declaration) are
+// told apart automatically -- multiplication still works normally.
+int a = 3;
+int b = 4;
+int product = a * b;
+print(f"product is {product}");
+
+// Pointers work with class instances too.
+class Counter {
+    def __init__(self) {
+        self.value = 0;
+    }
+}
+
+Counter c = Counter();
+Counter* pc = &c;
+(*pc).value += 5;
+print(f"counter value is {c.value}");
+
+// None becomes NULL when compared against or assigned to a pointer.
+int* nothing = None;
+if (nothing == None) {
+    print("nothing is null, as expected");
+}

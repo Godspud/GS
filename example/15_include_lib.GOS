@@ -1,0 +1,20 @@
+// A small library file, meant to be #included by other files rather
+// than compiled on its own.
+
+def int square(int n) {
+    return n * n;
+}
+
+def int cube(int n) {
+    return n * n * n;
+}
+
+class Greeter {
+    def __init__(self) {
+        self.name = "World";
+    }
+
+    def str greeting(self) {
+        return f"Hello, {self.name}!";
+    }
+}
