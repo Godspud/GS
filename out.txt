@@ -1,0 +1,277 @@
+===== example/02_variables_and_types.GOS =====
+
+--- TOKENS ---
+Token('int', TYPE, 2:0)
+Token('age', IDENT, 2:4)
+Token('=', ASSIGN, 2:8)
+Token(30, INT, 2:10)
+Token(';', EOL, 2:12)
+Token('float', TYPE, 3:0)
+Token('price', IDENT, 3:6)
+Token('=', ASSIGN, 3:12)
+Token(19.99, FLOAT, 3:14)
+Token(';', EOL, 3:19)
+Token('str', TYPE, 4:0)
+Token('name', IDENT, 4:4)
+Token('=', ASSIGN, 4:9)
+Token('Ada', STR, 4:11)
+Token(';', EOL, 4:16)
+Token('bool', TYPE, 5:0)
+Token('active', IDENT, 5:5)
+Token('=', ASSIGN, 5:12)
+Token('True', BOOL, 5:14)
+Token(';', EOL, 5:18)
+Token('print', IDENT, 7:0)
+Token('(', LNORPAREN, 7:5)
+Token('name', IDENT, 7:6)
+Token(',', COMMA, 7:10)
+Token('is', STR, 7:12)
+Token(',', COMMA, 7:16)
+Token('age', IDENT, 7:18)
+Token(',', COMMA, 7:21)
+Token('years old, active:', STR, 7:23)
+Token(',', COMMA, 7:43)
+Token('active', IDENT, 7:45)
+Token(')', RNORPAREN, 7:51)
+Token(';', EOL, 7:52)
+Token('const', CONST, 10:0)
+Token('pi', IDENT, 10:6)
+Token('=', ASSIGN, 10:9)
+Token(3.14159, FLOAT, 10:11)
+Token(';', EOL, 10:18)
+Token('print', IDENT, 11:0)
+Token('(', LNORPAREN, 11:5)
+Token('f', IDENT, 11:6)
+Token('pi is approximately {pi}', STR, 11:7)
+Token(')', RNORPAREN, 11:33)
+Token(';', EOL, 11:34)
+Token('any', TYPE, 14:0)
+Token('thing', IDENT, 14:4)
+Token('=', ASSIGN, 14:10)
+Token(42, INT, 14:12)
+Token(';', EOL, 14:14)
+Token('print', IDENT, 15:0)
+Token('(', LNORPAREN, 15:5)
+Token('f', IDENT, 15:6)
+Token('thing is {thing}', STR, 15:7)
+Token(')', RNORPAREN, 15:25)
+Token(';', EOL, 15:26)
+Token('thing', IDENT, 16:0)
+Token('=', ASSIGN, 16:6)
+Token("now it's a string", STR, 16:8)
+Token(';', EOL, 16:27)
+Token('print', IDENT, 17:0)
+Token('(', LNORPAREN, 17:5)
+Token('f', IDENT, 17:6)
+Token('thing is {thing}', STR, 17:7)
+Token(')', RNORPAREN, 17:25)
+Token(';', EOL, 17:26)
+Token('thing', IDENT, 18:0)
+Token('=', ASSIGN, 18:6)
+Token(3.14, FLOAT, 18:8)
+Token(';', EOL, 18:12)
+Token('print', IDENT, 19:0)
+Token('(', LNORPAREN, 19:5)
+Token('f', IDENT, 19:6)
+Token('thing is {thing}', STR, 19:7)
+Token(')', RNORPAREN, 19:25)
+Token(';', EOL, 19:26)
+Token('int', TYPE, 23:0)
+Token('whole', IDENT, 23:4)
+Token('=', ASSIGN, 23:10)
+Token(7, INT, 23:12)
+Token(';', EOL, 23:13)
+Token('float', TYPE, 24:0)
+Token('as_float', IDENT, 24:6)
+Token('=', ASSIGN, 24:15)
+Token('(', LNORPAREN, 24:17)
+Token('float', TYPE, 24:18)
+Token(')', RNORPAREN, 24:23)
+Token('whole', IDENT, 24:24)
+Token(';', EOL, 24:29)
+Token('print', IDENT, 25:0)
+Token('(', LNORPAREN, 25:5)
+Token('f', IDENT, 25:6)
+Token('{whole} as a float is {as_float}', STR, 25:7)
+Token(')', RNORPAREN, 25:41)
+Token(';', EOL, 25:42)
+Token('str', TYPE, 27:0)
+Token('number_text', IDENT, 27:4)
+Token('=', ASSIGN, 27:16)
+Token('123', STR, 27:18)
+Token(';', EOL, 27:23)
+Token('int', TYPE, 28:0)
+Token('parsed', IDENT, 28:4)
+Token('=', ASSIGN, 28:11)
+Token('(', LNORPAREN, 28:13)
+Token('int', TYPE, 28:14)
+Token(')', RNORPAREN, 28:17)
+Token('number_text', IDENT, 28:18)
+Token(';', EOL, 28:29)
+Token('print', IDENT, 29:0)
+Token('(', LNORPAREN, 29:5)
+Token('f', IDENT, 29:6)
+Token("parsed '{number_text}' as int: {parsed}", STR, 29:7)
+Token(')', RNORPAREN, 29:48)
+Token(';', EOL, 29:49)
+Token('int', TYPE, 32:0)
+Token('a', IDENT, 32:4)
+Token('=', ASSIGN, 32:6)
+Token(5, INT, 32:8)
+Token(';', EOL, 32:9)
+Token('float', TYPE, 33:0)
+Token('b', IDENT, 33:6)
+Token('=', ASSIGN, 33:8)
+Token(2.5, FLOAT, 33:10)
+Token(';', EOL, 33:13)
+Token('float', TYPE, 34:0)
+Token('sum', IDENT, 34:6)
+Token('=', ASSIGN, 34:10)
+Token('a', IDENT, 34:12)
+Token('+', PLUS, 34:14)
+Token('b', IDENT, 34:16)
+Token(';', EOL, 34:17)
+Token('print', IDENT, 35:0)
+Token('(', LNORPAREN, 35:5)
+Token('f', IDENT, 35:6)
+Token('5 + 2.5 = {sum}', STR, 35:7)
+Token(')', RNORPAREN, 35:24)
+Token(';', EOL, 35:25)
+Token('str', TYPE, 38:0)
+Token('greeting', IDENT, 38:4)
+Token('=', ASSIGN, 38:13)
+Token('Hello, ', STR, 38:15)
+Token('+', PLUS, 38:25)
+Token('name', IDENT, 38:27)
+Token('+', PLUS, 38:32)
+Token('!', STR, 38:34)
+Token(';', EOL, 38:37)
+Token('print', IDENT, 39:0)
+Token('(', LNORPAREN, 39:5)
+Token('greeting', IDENT, 39:6)
+Token(')', RNORPAREN, 39:14)
+Token(';', EOL, 39:15)
+Token(None, EOF, 40:0)
+
+--- AST ---
+└── ProgramNode
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('int', TYPE, 2:0)]
+    │   ├── IdentNode [token=Token('age', IDENT, 2:4)]
+    │   └── LiteralNode [token=Token(30, INT, 2:10)]
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('float', TYPE, 3:0)]
+    │   ├── IdentNode [token=Token('price', IDENT, 3:6)]
+    │   └── LiteralNode [token=Token(19.99, FLOAT, 3:14)]
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('str', TYPE, 4:0)]
+    │   ├── IdentNode [token=Token('name', IDENT, 4:4)]
+    │   └── LiteralNode [token=Token('Ada', STR, 4:11)]
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('bool', TYPE, 5:0)]
+    │   ├── IdentNode [token=Token('active', IDENT, 5:5)]
+    │   └── LiteralNode [token=Token('True', BOOL, 5:14)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 7:0)]
+    │   ├── IdentNode [token=Token('name', IDENT, 7:6)]
+    │   ├── LiteralNode [token=Token('is', STR, 7:12)]
+    │   ├── IdentNode [token=Token('age', IDENT, 7:18)]
+    │   ├── LiteralNode [token=Token('years old, active:', STR, 7:23)]
+    │   └── IdentNode [token=Token('active', IDENT, 7:45)]
+    ├── VariableDeclNode [type=None, is_const=True]
+    │   ├── IdentNode [token=Token('pi', IDENT, 10:6)]
+    │   └── LiteralNode [token=Token(3.14159, FLOAT, 10:11)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 11:0)]
+    │   └── FStringNode
+    │       ├── FStringTextNode [text='pi is approximately ']
+    │       └── FStringExprNode [expression='pi']
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('any', TYPE, 14:0)]
+    │   ├── IdentNode [token=Token('thing', IDENT, 14:4)]
+    │   └── LiteralNode [token=Token(42, INT, 14:12)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 15:0)]
+    │   └── FStringNode
+    │       ├── FStringTextNode [text='thing is ']
+    │       └── FStringExprNode [expression='thing']
+    ├── AssignNode [operation=Token('=', ASSIGN, 16:6)]
+    │   ├── IdentNode [token=Token('thing', IDENT, 16:0)]
+    │   └── LiteralNode [token=Token("now it's a string", STR, 16:8)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 17:0)]
+    │   └── FStringNode
+    │       ├── FStringTextNode [text='thing is ']
+    │       └── FStringExprNode [expression='thing']
+    ├── AssignNode [operation=Token('=', ASSIGN, 18:6)]
+    │   ├── IdentNode [token=Token('thing', IDENT, 18:0)]
+    │   └── LiteralNode [token=Token(3.14, FLOAT, 18:8)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 19:0)]
+    │   └── FStringNode
+    │       ├── FStringTextNode [text='thing is ']
+    │       └── FStringExprNode [expression='thing']
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('int', TYPE, 23:0)]
+    │   ├── IdentNode [token=Token('whole', IDENT, 23:4)]
+    │   └── LiteralNode [token=Token(7, INT, 23:12)]
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('float', TYPE, 24:0)]
+    │   ├── IdentNode [token=Token('as_float', IDENT, 24:6)]
+    │   └── CastNode [type=Token('float', TYPE, 24:18)]
+    │       └── IdentNode [token=Token('whole', IDENT, 24:24)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 25:0)]
+    │   └── FStringNode
+    │       ├── FStringExprNode [expression='whole']
+    │       ├── FStringTextNode [text=' as a float is ']
+    │       └── FStringExprNode [expression='as_float']
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('str', TYPE, 27:0)]
+    │   ├── IdentNode [token=Token('number_text', IDENT, 27:4)]
+    │   └── LiteralNode [token=Token('123', STR, 27:18)]
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('int', TYPE, 28:0)]
+    │   ├── IdentNode [token=Token('parsed', IDENT, 28:4)]
+    │   └── CastNode [type=Token('int', TYPE, 28:14)]
+    │       └── IdentNode [token=Token('number_text', IDENT, 28:18)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 29:0)]
+    │   └── FStringNode
+    │       ├── FStringTextNode [text="parsed '"]
+    │       ├── FStringExprNode [expression='number_text']
+    │       ├── FStringTextNode [text="' as int: "]
+    │       └── FStringExprNode [expression='parsed']
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('int', TYPE, 32:0)]
+    │   ├── IdentNode [token=Token('a', IDENT, 32:4)]
+    │   └── LiteralNode [token=Token(5, INT, 32:8)]
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('float', TYPE, 33:0)]
+    │   ├── IdentNode [token=Token('b', IDENT, 33:6)]
+    │   └── LiteralNode [token=Token(2.5, FLOAT, 33:10)]
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('float', TYPE, 34:0)]
+    │   ├── IdentNode [token=Token('sum', IDENT, 34:6)]
+    │   └── BinaryNode [operation=Token('+', PLUS, 34:14)]
+    │       ├── IdentNode [token=Token('a', IDENT, 34:12)]
+    │       └── IdentNode [token=Token('b', IDENT, 34:16)]
+    ├── CallNode
+    │   ├── IdentNode [token=Token('print', IDENT, 35:0)]
+    │   └── FStringNode
+    │       ├── FStringTextNode [text='5 + 2.5 = ']
+    │       └── FStringExprNode [expression='sum']
+    ├── VariableDeclNode [is_const=False]
+    │   ├── TypeNode [token=Token('str', TYPE, 38:0)]
+    │   ├── IdentNode [token=Token('greeting', IDENT, 38:4)]
+    │   └── BinaryNode [operation=Token('+', PLUS, 38:32)]
+    │       ├── BinaryNode [operation=Token('+', PLUS, 38:25)]
+    │       │   ├── LiteralNode [token=Token('Hello, ', STR, 38:15)]
+    │       │   └── IdentNode [token=Token('name', IDENT, 38:27)]
+    │       └── LiteralNode [token=Token('!', STR, 38:34)]
+    └── CallNode
+        ├── IdentNode [token=Token('print', IDENT, 39:0)]
+        └── IdentNode [token=Token('greeting', IDENT, 39:6)]
+
+============================================================
+

@@ -1,0 +1,643 @@
+//==================================================
+// GS Grammar (complete)
+//==================================================
+//
+// BNF/LR notation
+//
+// lowercase      = non-terminal (grammar rule)
+// UPPERCASE      = terminal (lexer token)
+// 'text'         = literal
+//
+// =              definition
+// |              alternative
+// ?              optional
+// *              zero or more
+// +              one or more
+//
+// ε              empty production
+//
+// Left recursion is preferred.
+// Semantic analysis is NOT described here (e.g. "is this expression
+// actually assignable" is a semantic check on the parsed tree, not
+// a separate grammar production — see the `lvalue` note below).
+//
+//==================================================
+// Program
+//==================================================
+
+program = stmt*
+
+stmt =
+      simple_stmt
+    | compound_stmt
+
+
+//==================================================
+// Simple statements
+//==================================================
+
+simple_stmt =
+      variable_decl ';'
+    | assignment ';'
+    | expression ';'
+    | return_stmt ';'
+    | break_stmt ';'
+    | continue_stmt ';'
+    | pass_stmt ';'
+    | raise_stmt ';'
+    | assert_stmt ';'
+    | del_stmt ';'
+    | include_stmt
+
+//==================================================
+// Compound statements
+//==================================================
+
+compound_stmt =
+      if_stmt
+    | while_stmt
+    | for_stmt
+    | try_stmt
+    | with_stmt
+    | match_stmt
+    | function_def
+    | class_def
+
+
+//==================================================
+// Blocks
+//==================================================
+
+block =
+    '{'
+        stmt*
+    '}'
+
+
+//==================================================
+// Types
+//==================================================
+
+type =
+      builtin_type
+    | IDENTIFIER
+    | pointer_type
+
+
+builtin_type =
+      'int'
+    | 'float'
+    | 'bool'
+    | 'str'
+    | 'list'
+    | 'dict'
+    | 'set'
+    | 'tuple'
+    | 'any'
+    | 'void'
+
+
+pointer_type =
+      type '*'
+
+// `type` already includes `pointer_type` in its own alternatives, so
+// `int**` (pointer to pointer) falls out for free via recursion —
+// no separate rule needed.
+
+
+//==================================================
+// Variables
+//==================================================
+
+variable_decl =
+      type IDENTIFIER
+    | type IDENTIFIER '=' expression
+    | 'const' IDENTIFIER '=' expression
+
+
+assignment =
+      lvalue '='   expression
+    | lvalue '+='  expression
+    | lvalue '-='  expression
+    | lvalue '*='  expression
+    | lvalue '/='  expression
+    | lvalue '%='  expression
+    | lvalue '**=' expression
+    | IDENTIFIER ':=' expression
+
+// NOTE: earlier drafts only listed +=, -=, *=, /= — %=  and **= are
+// added to match the aug_assign_stmt forms you originally
+// documented in the parser's docstring. `//=` (floor-divide-assign)
+// is intentionally NOT here: your lexer has no `//` operator token
+// at all (floor division only ever appeared as the `floordiv(a, b)`
+// builtin function call in your examples, never as infix syntax).
+// If you want `//` and `//=` as real operators, add the lexer
+// tokens first — this grammar can't invent syntax the lexer never
+// produces.
+
+
+lvalue =
+      unary_expr
+
+// NOTE: earlier drafts had `lvalue = IDENTIFIER | member_access |
+// index_access | dereference` as four separate alternatives, but
+// `member_access` was ALSO separately defined as
+// `postfix_expr '.' IDENTIFIER` — which is exactly what
+// `postfix_expr`'s member_suffix already parses. That's two rules
+// describing the same shape (`a.b.c`), which is either duplicated
+// work or an outright ambiguity depending on how strictly a parser
+// generator treats it. Collapsing `lvalue` down to `unary_expr`
+// fixes this in one move: `unary_expr` already covers a bare
+// IDENTIFIER, any postfix chain (`a.b`, `a[i]`, `nums[0]`), AND the
+// dereference case (`*p`) via its `'*' unary_expr` alternative — so
+// `index_access` and `dereference`, which were referenced but never
+// defined in earlier drafts, are now defined implicitly through
+// this one rule. Whether a *given* unary_expr is actually a legal
+// assignment target (you can't assign to `1 + 2`) is a semantic
+// check on the parsed tree, per the "semantic analysis is NOT
+// described here" rule at the top of this file — not something the
+// grammar itself should try to encode.
+
+
+//==================================================
+// Literals
+//==================================================
+
+literal =
+      INTEGER
+    | FLOAT
+    | STRING
+    | FSTRING
+    | 'True'
+    | 'False'
+    | 'None'
+
+
+//==================================================
+// Expressions
+//==================================================
+
+expression =
+      assignment_expr
+
+
+//--------------------------------------------------
+// Assignment
+//--------------------------------------------------
+
+assignment_expr =
+      conditional_expr
+    | lvalue '='   assignment_expr
+    | lvalue '+='  assignment_expr
+    | lvalue '-='  assignment_expr
+    | lvalue '*='  assignment_expr
+    | lvalue '/='  assignment_expr
+    | lvalue '%='  assignment_expr
+    | lvalue '**=' assignment_expr
+    | IDENTIFIER ':=' assignment_expr
+
+
+//--------------------------------------------------
+// Ternary
+//--------------------------------------------------
+
+conditional_expr =
+      logical_or_expr
+    | logical_or_expr '?' expression ':' conditional_expr
+
+
+//--------------------------------------------------
+// Boolean OR
+//--------------------------------------------------
+
+logical_or_expr =
+      logical_or_expr 'or' logical_and_expr
+    | logical_or_expr '||' logical_and_expr
+    | logical_and_expr
+
+
+//--------------------------------------------------
+// Boolean AND
+//--------------------------------------------------
+
+logical_and_expr =
+      logical_and_expr 'and' equality_expr
+    | logical_and_expr '&&' equality_expr
+    | equality_expr
+
+
+//--------------------------------------------------
+// Equality
+//--------------------------------------------------
+
+equality_expr =
+      equality_expr '==' comparison_expr
+    | equality_expr '!=' comparison_expr
+    | comparison_expr
+
+
+//--------------------------------------------------
+// Comparisons
+//--------------------------------------------------
+
+comparison_expr =
+      comparison_expr '<'  additive_expr
+    | comparison_expr '>'  additive_expr
+    | comparison_expr '<=' additive_expr
+    | comparison_expr '>=' additive_expr
+    | comparison_expr 'in' additive_expr
+    | comparison_expr 'is' additive_expr
+    | additive_expr
+
+// NOTE: earlier drafts also defined `comparison_chain` /
+// `comparison_tail` / `compare_op` as a separate set of rules meant
+// to give Python-style `0 < x < 10` chained-comparison semantics —
+// but nothing else in the grammar ever referenced them, so they
+// were dead. They're removed here. The left-recursive form above
+// already lets `0 < x < 10` PARSE (as `(0 < x) < 10`); whether that
+// should evaluate the way Python's chained comparisons do (as
+// `(0 < x) and (x < 10)`) is a semantic-analysis decision, not a
+// grammar one — consistent with this file's stated scope.
+//
+// NOTE: `'is'` was a real lexer token (`"is": "IS"`) that no rule in
+// earlier drafts ever consumed — added as a comparison operator
+// here, alongside `in`.
+
+
+//--------------------------------------------------
+// Addition
+//--------------------------------------------------
+
+additive_expr =
+      additive_expr '+' multiplicative_expr
+    | additive_expr '-' multiplicative_expr
+    | multiplicative_expr
+
+
+//--------------------------------------------------
+// Multiplication
+//--------------------------------------------------
+
+multiplicative_expr =
+      multiplicative_expr '*' unary_expr
+    | multiplicative_expr '/' unary_expr
+    | multiplicative_expr '%' unary_expr
+    | unary_expr
+
+// NOTE: the `'floordiv' unary_expr` alternative from earlier drafts
+// is removed — your lexer never emits a `floordiv` operator token;
+// `floordiv(a, b)` in your examples was always an ordinary function
+// call, which is already covered by `postfix_expr` + `call_suffix`.
+// A grammar rule for syntax the lexer can't produce is unreachable
+// dead code. If GS later wants `//` as a real infix operator, add
+// the lexer token first, then reinstate this alternative.
+
+
+//--------------------------------------------------
+// Unary (including cast)
+//--------------------------------------------------
+
+unary_expr =
+      postfix_expr
+    | '-' unary_expr
+    | '+' unary_expr
+    | '!' unary_expr
+    | 'not' unary_expr
+    | '&' unary_expr
+    | '*' unary_expr
+    | '(' type ')' unary_expr
+
+// NOTE: earlier drafts defined `unary_expr` TWICE — once for the
+// prefix-operator forms, once for the cast form. In BNF that's just
+// two alternatives of the same rule and needs to be one block, as
+// above, not two separate rule definitions (which reads as a typo
+// or an accidental override depending on the tool consuming it).
+
+
+//==================================================
+// Postfix expressions
+//==================================================
+
+postfix_expr =
+      primary_expr postfix*
+
+
+postfix =
+      call_suffix
+    | member_suffix
+    | index_suffix
+
+
+call_suffix =
+      '(' argument_list? ')'
+
+// NOTE: earlier drafts defined `call_suffix` a second time, verbatim,
+// under a later "Function calls" section. Identical definitions in
+// two places aren't a correctness bug, but they're a maintenance
+// hazard (edit one copy, forget the other) — there is exactly one
+// definition of `call_suffix` in this file now.
+
+
+member_suffix =
+      '.' IDENTIFIER
+
+
+index_suffix =
+      '[' slice_or_expr ']'
+
+
+slice_or_expr =
+      expression
+    | slice
+
+
+slice =
+      expression? ':' expression? slice_step?
+
+
+slice_step =
+      ':' expression?
+
+
+primary_expr =
+      literal
+    | IDENTIFIER
+    | '(' expression ')'
+    | list_literal
+    | tuple_literal
+    | dict_literal
+    | set_literal
+
+
+//==================================================
+// Collection literals
+//==================================================
+
+list_literal =
+      '[' ']'
+    | '[' expression_list ']'
+
+
+tuple_literal =
+      '(' ')'
+    | '(' expression ',' ')'
+    | '(' expression_list ')'
+
+
+dict_literal =
+      '{' '}'
+    | '{' dict_entries '}'
+
+
+set_literal =
+      '{' expression_list '}'
+
+
+dict_entries =
+      dict_entry
+    | dict_entries ',' dict_entry
+
+
+dict_entry =
+      expression ':' expression
+
+
+expression_list =
+      expression
+    | expression_list ',' expression
+
+
+//==================================================
+// Functions
+//==================================================
+
+function_def =
+      decorator* 'def' return_type? IDENTIFIER
+      '(' parameter_list? ')'
+      block
+
+
+return_type =
+      type
+
+
+//--------------------------------------------------
+// Parameters
+//--------------------------------------------------
+
+parameter_list =
+      parameter (',' parameter)* ','?
+
+
+parameter =
+      normal_parameter
+    | varargs_parameter
+    | kwargs_parameter
+
+
+normal_parameter =
+      IDENTIFIER
+    | type IDENTIFIER
+    | IDENTIFIER '=' expression
+    | type IDENTIFIER '=' expression
+
+
+varargs_parameter =
+      '*' IDENTIFIER
+
+
+kwargs_parameter =
+      '**' IDENTIFIER
+
+
+//--------------------------------------------------
+// Decorators
+//--------------------------------------------------
+
+decorator =
+      '@' qualified_name
+
+// NOTE: earlier drafts listed `'@' IDENTIFIER | '@' qualified_name`
+// as two alternatives, but `qualified_name` already includes the
+// single-IDENTIFIER case (`qualified_name = IDENTIFIER | ...`), so
+// the first alternative was redundant. One rule covers both
+// `@staticmethod` and any future `@module.decorator` form.
+
+
+//--------------------------------------------------
+// Return
+//--------------------------------------------------
+
+return_stmt =
+      'return'
+    | 'return' expression
+
+
+//--------------------------------------------------
+// Other simple statements
+//--------------------------------------------------
+
+break_stmt =
+      'break'
+
+continue_stmt =
+      'continue'
+
+pass_stmt =
+      'pass'
+
+raise_stmt =
+      'raise'
+    | 'raise' expression
+
+assert_stmt =
+      'assert' expression
+    | 'assert' expression ',' expression
+
+del_stmt =
+      'del' lvalue
+
+
+//==================================================
+// Function calls
+//==================================================
+
+argument_list =
+      argument
+    | argument_list ',' argument
+
+
+argument =
+      expression
+    | IDENTIFIER '=' expression
+    | '*' expression
+    | '**' expression
+
+
+//==================================================
+// Qualified names
+//==================================================
+
+qualified_name =
+      IDENTIFIER
+    | qualified_name '.' IDENTIFIER
+
+
+//==================================================
+// Classes
+//==================================================
+
+method_def =
+      decorator*
+      'def'
+      return_type?
+      IDENTIFIER
+      '(' parameter_list? ')'
+      block
+
+
+class_def =
+      'class'
+      inheritance?
+      IDENTIFIER
+      class_block
+
+
+inheritance =
+      '(' IDENTIFIER ')'
+
+
+class_block =
+      '{'
+      class_member*
+      '}'
+
+
+class_member =
+      variable_decl ';'
+    | method_def
+
+
+//==================================================
+// Member access
+//==================================================
+//
+// Removed as a standalone rule — folded into `postfix_expr`'s
+// `member_suffix` (`'.' IDENTIFIER`), which already parses `a.b.c`
+// chains via `postfix_expr postfix*`. See the note under `lvalue`
+// above for why keeping both was a duplicate-grammar hazard.
+
+
+//==================================================
+// Control flow
+//==================================================
+
+if_stmt =
+      'if' '(' expression ')' block
+      elif_clause*
+      else_clause?
+
+elif_clause =
+      'elif' '(' expression ')' block
+
+else_clause =
+      'else' block
+
+
+while_stmt =
+      'while' '(' expression ')' block
+
+
+for_stmt =
+      'for' '(' IDENTIFIER 'in' expression ')' block
+
+
+try_stmt =
+      'try' block
+      except_clause*
+      finally_clause?
+
+except_clause =
+      'except' IDENTIFIER block
+
+// NOTE: every `try`/`except` in the worked examples bound the
+// exception to a name (`except e { ... }`) — there's no example of
+// a bare `except { ... }`. IDENTIFIER is required here to match;
+// loosen to `'except' IDENTIFIER? block` if bare except should be
+// legal.
+
+finally_clause =
+      'finally' block
+
+
+with_stmt =
+      'with' expression 'as' IDENTIFIER block
+
+
+match_stmt =
+      'match' '(' expression ')'
+      '{'
+          case_clause*
+          default_clause?
+      '}'
+
+case_clause =
+      'case' expression_list block
+
+default_clause =
+      'default' block
+
+
+//==================================================
+// Include
+//==================================================
+
+include_stmt =
+      '#include' IDENTIFIER
+    | '#include' qualified_name 'from' IDENTIFIER
+    | '#include' qualified_name 'from' IDENTIFIER 'as' IDENTIFIER
+
+// Covers all three forms seen in the examples:
+//   #include lib.GOS;
+//   #include square from lib.GOS;
+//   #include Greeter from lib.GOS as Welcomer;
