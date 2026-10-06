@@ -124,7 +124,7 @@ class Token:
         # operators
         "+": "PLUS",
         "-": "MINUS",
-        "*": "TIMES",
+        # * is down further as ASTERISK
         "/": "DIVIDE",
         # statements
         ";": "EOL",

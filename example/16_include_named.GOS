@@ -6,8 +6,8 @@
 // if 'Greeter' inherited from another class, that parent would also
 // need its own #include.
 
-#include square from "15_include_lib.gs"
-#include Greeter from "15_include_lib.gs" as Welcomer
+#include square from "15_include_lib.gs";
+#include Greeter from "15_include_lib.gs" as Welcomer;
 
 print(f"square(6) = {square(6)}");
 // note: cube() was never included, so it isn't available here at all

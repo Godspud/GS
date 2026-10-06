@@ -47,7 +47,7 @@ simple_stmt =
     | raise_stmt ';'
     | assert_stmt ';'
     | del_stmt ';'
-    | include_stmt
+    | include_stmt ';'
 
 //==================================================
 // Compound statements
@@ -116,13 +116,13 @@ variable_decl =
 
 
 assignment =
-      lvalue '='   expression
-    | lvalue '+='  expression
-    | lvalue '-='  expression
-    | lvalue '*='  expression
-    | lvalue '/='  expression
-    | lvalue '%='  expression
-    | lvalue '**=' expression
+      IDENTIFIER '='   expression
+    | IDENTIFIER '+='  expression
+    | IDENTIFIER '-='  expression
+    | IDENTIFIER '*='  expression
+    | IDENTIFIER '/='  expression
+    | IDENTIFIER '%='  expression
+    | IDENTIFIER '**=' expression
     | IDENTIFIER ':=' expression
 
 // NOTE: earlier drafts only listed +=, -=, *=, /= — %=  and **= are

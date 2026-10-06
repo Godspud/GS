@@ -1,5 +1,5 @@
 // #include "file" splices the entire file's contents in place, like C.
-#include "15_include_lib.gs"
+#include "15_include_lib.gs";
 
 print(f"square(5) = {square(5)}");
 print(f"cube(3) = {cube(3)}");
