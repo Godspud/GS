@@ -3,10 +3,6 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
 
-# with open("/home/god_spud/STUFFS/GS/example/examples.txt", "r") as FILE:
-#    code = FILE.read()
-
-
 class Color:
     RESET = "\033[0m"
 
@@ -18,7 +14,6 @@ class Color:
     WHITE = "\033[37m"
 
     BOLD = "\033[1m"
-
 
 class ErrorCode(Enum):
     UNKNOWN_CHARACTER = auto()
@@ -34,11 +29,9 @@ class ErrorCode(Enum):
     INVALID_BASE_NUMBER = auto()
     INVALID_SUFFIX = auto()
 
-
 class Severity(Enum):
     ERROR = auto()
     WARNING = auto()
-
 
 @dataclass
 class LexerDiagnostic:
@@ -49,7 +42,6 @@ class LexerDiagnostic:
     col: int
     source_line: str = ""
     highlight_length: int = 1
-
 
     def format(self):
         colour = Color.RED if self.severity == Severity.ERROR else Color.YELLOW
@@ -76,17 +68,14 @@ class LexerDiagnostic:
     
         return "\n".join(out)
 
-
 class LexerError(Exception):
     def __init__(self, diagnostic):
         self.diagnostic = diagnostic
         super().__init__(diagnostic.message)
 
-
 class LexerWarning:
     def __init__(self, diagnostic):
         self.diagnostic = diagnostic
-
 
 @dataclass
 class LexResult:
@@ -179,6 +168,13 @@ class Token:
         ">": "GT",
         "<=": "LE",
         ">=": "GE",
+        "+=": "PLUS_ASSIGN",
+        "-=": "MINUS_ASSIGN",
+        "*=": "STAR_ASSIGN",
+        "/=": "DIV_ASSIGN",
+        "%=": "MOD_ASSIGN",
+        "**=": "POW_ASSIGN",
+        ":=": "WALRUS",
         # misc
         "const": "CONST",
         "del": "DEL",
@@ -212,7 +208,6 @@ class Token:
         else:
             kind = "IDENT"
         return cls(raw, kind, row, col)
-
 
 class Lexer:
     def __init__(self, source, emit_newlines=False):
@@ -258,7 +253,6 @@ class Lexer:
     def add_token(self, raw, row, col, forced=None):
         self.tokens.append(Token.make(raw, row, col, forced))
 
-
     def error(
         self,
         code,
@@ -289,7 +283,6 @@ class Lexer:
         )
 
         self.errors.append(LexerError(diagnostic))
-
 
     def warning(
         self,
@@ -325,44 +318,36 @@ class Lexer:
     def lex(self):
         while self.peek() is not None:
             char = self.peek()
-            if char == "&":
-                self.lex_mem_modifier(self.row, self.col)
-                continue
-            if char == "@":
-                self.lex_modifier(self.row, self.col)
-                continue
-            if char == "#":
-                self.lex_include(self.row, self.col)
-                continue
+            row, col = self.row, self.col
             if char.isspace():
                 if char == "\n" and self.emit_newlines:
-                    self.add_token("\n", self.row, self.col, "NEWLINE")
+                    self.add_token("\n", row, col, "NEWLINE")
                 self.advance()
                 continue
-            start_row = self.row
-            start_col = self.col
-            if char.isalpha() or char == "_":
-                self.lex_identifier(start_row, start_col)
+            if char == "@":
+                self.lex_modifier(row, col)
                 continue
-            if char.isdigit():
-                self.lex_number(start_row, start_col)
-                continue
-            if char in "()[]{}":
-                self.lex_bracket(start_row, start_col)
+            if char == "#":
+                self.lex_include(row, col)
                 continue
             if self.lex_comment():
                 continue
-            if char in "-,.;:?%":
-                self.add_token(self.advance(), start_row, start_col)
+            if char in ("'", '"') or (char in ("r", "f") and self.peek(1) in ("'", '"')):
+                self.lex_string(row, col)
                 continue
-            if self.lex_operator(start_row, start_col):
+            if char.isalpha() or char == "_":
+                self.lex_identifier(row, col)
                 continue
-            if char in ("'", '"') or (char == "r" and self.peek(1) in ("'", '"')):
-                self.lex_string(start_row, start_col)
+            if char.isdigit():
+                self.lex_number(row, col)
+                continue
+            if char in "()[]{}":
+                self.lex_bracket(row, col)
+                continue
+            if self.lex_operator(row, col):
                 continue
             self.error(ErrorCode.UNKNOWN_CHARACTER, f"Unknown character {char!r}")
             self.advance()
-            print("e")
         self.check_brackets()
         self.tokens.append(Token(None, "EOF", self.row, self.col))
         return LexResult(self.tokens, self.errors, self.warnings)
@@ -464,25 +449,34 @@ class Lexer:
                     self.bracket_stack.pop()
         self.add_token(char, row, col)
 
+    OPERATORS = sorted(
+        [
+            "**=", "+=", "-=", "*=", "/=", "%=", ":=",
+            "==", "!=", "<=", ">=", "&&", "||",
+            "+", "-", "*", "/", "%", "=", "<", ">", "!", "&",
+            ":", "?", ",", ".", ";",
+        ],
+        key=len,
+        reverse=True,
+    )
+
     def lex_operator(self, row, col):
-        two_char = (self.peek() or "") + (self.peek(1) or "")
-        operators_2 = {"==", "!=", "<=", ">=", "&&", "||"}
-        if two_char in operators_2:
-            self.advance()
-            self.advance()
-            self.add_token(two_char, row, col)
-            return True
-        operators_1 = {"+", "-", "*", "/", "=", "<", ">", "!"}
-        if self.peek() in operators_1:
-            char = self.advance()
-            self.add_token(char, row, col)
-            return True
+        for op in self.OPERATORS:
+            if self.source.startswith(op, self.cursor):
+                for _ in op:
+                    self.advance()
+                self.add_token(op, row, col)
+                return True
         return False
 
     def lex_string(self, row, col):
         raw = False
+        fstr = False
         if self.peek() == "r":
             raw = True
+            self.advance()
+        if self.peek() == 'f':
+            fstr = True
             self.advance()
         quote = self.advance()
         triple = False
@@ -534,7 +528,10 @@ class Lexer:
                 self.advance()
                 continue
             chars.append(self.advance())
-        self.tokens.append(Token("".join(chars), "STR", row, col))
+        if fstr:
+            self.tokens.append(Token("".join(chars), "FSTR", row, col))
+        else:
+            self.tokens.append(Token("".join(chars), "STR", row, col))
 
     def lex_comment(self):
         if self.peek() == "/" and self.peek(1) == "/":
@@ -542,8 +539,6 @@ class Lexer:
                 self.advance()
             return True
         if self.peek() == "/" and self.peek(1) == "*":
-            start_row = self.row
-            start_col = self.col
             self.advance()
             self.advance()
             while True:
@@ -551,8 +546,8 @@ class Lexer:
                     self.error(
                         ErrorCode.UNTERMINATED_COMMENT,
                         "Block comment was never closed",
-                        start_row,
-                        start_col,
+                        self.row,
+                        self.col,
                     )
                     return True
                 if self.peek() == "*" and self.peek(1) == "/":
@@ -616,23 +611,6 @@ class Lexer:
         value = "".join(modifier)
         self.tokens.append(Token(value, "AT", row, col))
 
-    def lex_mem_modifier(self, row, col):
-        type_of_op = self.peek()
-        if type_of_op == "*":
-            self.tokens.append(Token(type_of_op, "ASTERISK", row, col))
-        elif type_of_op == "&":
-            self.tokens.append(Token(type_of_op, "AMPERSAND", row, col))
-        else:
-            self.error(
-                ErrorCode.INVALID_TOKEN,
-                f"Unknown memory modifier {type_of_op}",
-                row,
-                col,
-            )
-            return
-        self.advance()
-
-
 class Run:
     def run_lexer(self, source):
         lexer = Lexer(source)
@@ -645,11 +623,3 @@ class Run:
         if not result.success:
             result.finish()
         return result.tokens
-
-
-# lexed = Run().run_lexer(code)
-# out_path = Path("~/STUFFS/GS/lexed.txt").expanduser()
-# out_path.parent.mkdir(parents=True, exist_ok=True)
-# with out_path.open("w", encoding="utf-8") as FILE:
-#     for out in lexed:
-#         FILE.write(str(out) + "\n")

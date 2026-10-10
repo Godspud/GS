@@ -1,0 +1,1045 @@
+// The simplest possible Guavascript program.
+print("Hello, world!");
+
+// print() accepts multiple arguments, space-separated, like Python.
+print("The answer is", 42);
+// Locked types: once declared, the type can never change.
+int age = 30;
+float price = 19.99;
+str name = "Ada";
+bool active = True;
+
+print(name, "is", age, "years old, active:", active);
+
+// const: write-once, no reassignment ever allowed.
+const pi = 3.14159;
+print(f"pi is approximately {pi}");
+
+// 'any': untyped, can be reassigned to any type freely.
+any thing = 42;
+print(f"thing is {thing}");
+thing = "now it's a string";
+print(f"thing is {thing}");
+thing = 3.14;
+print(f"thing is {thing}");
+
+// Casting: (typename)expr. Casting a locked variable requires
+// assigning the result to a new variable (the original stays locked).
+int whole = 7;
+float as_float = (float)whole;
+print(f"{whole} as a float is {as_float}");
+
+str number_text = "123";
+int parsed = (int)number_text;
+print(f"parsed '{number_text}' as int: {parsed}");
+
+// Arithmetic promotion: int+int->int, int+float->float.
+int a = 5;
+float b = 2.5;
+float sum = a + b;
+print(f"5 + 2.5 = {sum}");
+
+// String concatenation with '+'.
+str greeting = "Hello, " + name + "!";
+print(greeting);
+int temperature = 75;
+
+if (temperature > 90) {
+    print("It's scorching!");
+} elif (temperature > 70) {
+    print("It's warm.");
+} elif (temperature > 50) {
+    print("It's mild.");
+} else {
+    print("It's cold.");
+}
+
+// Python-style chained comparisons: 0 < x < 10 means (0 < x) and (x < 10).
+int x = 5;
+if (0 < x < 10) {
+    print(f"{x} is between 0 and 10");
+}
+
+// and/or/not or the C spellings &&/||/! -- fully interchangeable.
+bool sunny = True;
+bool warm = False;
+if (sunny and not warm) {
+    print("Sunny but not warm.");
+}
+if (sunny || warm) {
+    print("At least one of sunny/warm is true.");
+}
+if (sunny && !warm) {
+    print("Same check, C spelling this time.");
+}
+
+// C-style ternary: cond ? true_value : false_value.
+int score = 82;
+str grade = score >= 60 ? "pass" : "fail";
+print(f"score {score} -> {grade}");
+// for (x in range(n)) -> compiles straight to a native C for-loop.
+for (i in range(5)) {
+    print(f"i = {i}");
+}
+
+// range(start, stop) and range(start, stop, step) are also supported.
+for (i in range(2, 10, 2)) {
+    print(f"even: {i}");
+}
+
+// for (item in <collection>) iterates a list, set, or string.
+list fruits = ["apple", "banana", "cherry"];
+for (fruit in fruits) {
+    print(f"fruit: {fruit}");
+}
+
+// while loop with break/continue.
+int count = 0;
+while (count < 10) {
+    count += 1;
+    if (count == 3) {
+        continue;
+    }
+    if (count == 7) {
+        break;
+    }
+    print(f"count is {count}");
+}
+
+// Building a list with append(), then iterating it.
+list squares = [];
+for (i in range(1, 6)) {
+    squares.append(i * i);
+}
+print(f"there are {len(squares)} squares");
+for (s in squares) {
+    print(f"square: {s}");
+}
+def greet(str person) {
+    print(f"Hello, {person}!");
+}
+
+greet("World");
+
+// C-style: return type comes before the function name.
+def int add(int a, int b) {
+    return a + b;
+}
+
+int total = add(3, 4);
+print(f"3 + 4 = {total}");
+
+// No return type written -> defaults to 'any' (not void). A function
+// that falls through without an explicit 'return' implicitly returns
+// None, Python-style.
+def describe(thing) {
+    print(f"describe got: {thing}");
+}
+
+describe(42);
+describe("a string");
+describe(3.14);
+
+// Recursion works normally.
+def int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+print(f"5! = {factorial(5)}");
+
+// Default parameter values.
+def int power(int base, int exponent = 2) {
+    int result = 1;
+    for (i in range(exponent)) {
+        result = result * base;
+    }
+    return result;
+}
+
+print(f"3^2 = {power(3)}");
+print(f"2^5 = {power(2, 5)}");
+class Animal {
+    def __init__(self) {
+        self.name = "creature";
+        self.legs = 4;
+    }
+
+    def speak(self) {
+        print(f"{self.name} says something");
+    }
+
+    def str describe(self) {
+        return f"{self.name} has {self.legs} legs";
+    }
+}
+
+// class (Parent)Child -- parent name goes in parens, before the child's name.
+class (Animal)Dog {
+    def __init__(self) {
+        Animal.__init__(self);
+    }
+
+    // Overriding speak(): Dog's own version is used instead of Animal's.
+    def speak(self) {
+        print(f"{self.name} says Woof!");
+    }
+
+    def bark_times(self, int times) {
+        for (i in range(times)) {
+            print(f"Woof #{i}");
+        }
+    }
+}
+
+Dog d = Dog();
+d.name = "Rex";
+d.legs = 4;
+d.speak();          // Dog's override runs.
+d.bark_times(3);
+print(d.describe()); // Not overridden -> falls back to Animal's describe().
+// Any variable declared directly in a class body -- typed or untyped --
+// is a class-level (shared) variable, accessed as ClassName.name from
+// anywhere. Instance fields are always implicit: only ever created by
+// assigning self.field inside a method (usually __init__).
+class Price {
+    int total_created = 0;   // typed class-level var
+
+    def __init__(self) {
+        self.unit = "USD";
+        self.amount = 0;
+        Price.total_created += 1;
+    }
+
+    def str describe(self) {
+        return f"{self.amount} {self.unit}";
+    }
+}
+
+// class (Price)Payment -- parent before the name, same as any other class.
+class (Price)Payment {
+    def __init__(self) {
+        // Unbound call, Python-style: calls the parent's __init__
+        // directly, passing self explicitly.
+        Price.__init__(self);
+        self.approved = False;
+    }
+}
+
+Price p1 = Price();
+Price p2 = Price();
+Payment pay = Payment();
+
+p1.amount = 42;
+print(p1.describe());
+print(f"total Price objects created: {Price.total_created}");
+// & takes an address, * dereferences -- plain C-style, available
+// anywhere, no special block or annotation needed.
+int x = 5;
+int* px = &x;
+*px = 42;
+print(f"x is now {x}");
+
+// Passing a pointer to a function lets it modify the caller's variable.
+def double_it(int* p) {
+    *p = *p * 2;
+}
+
+double_it(&x);
+print(f"x doubled is {x}");
+
+// 'x * y' (multiplication) and 'Foo* bar' (pointer declaration) are
+// told apart automatically -- multiplication still works normally.
+int a = 3;
+int b = 4;
+int product = a * b;
+print(f"product is {product}");
+
+// Pointers work with class instances too.
+class Counter {
+    def __init__(self) {
+        self.value = 0;
+    }
+}
+
+Counter c = Counter();
+Counter* pc = &c;
+(*pc).value += 5;
+print(f"counter value is {c.value}");
+
+// None becomes NULL when compared against or assigned to a pointer.
+int* nothing = None;
+if (nothing == None) {
+    print("nothing is null, as expected");
+}
+str name = "Guavascript";
+int version = 1;
+
+// f-strings interpolate arbitrary expressions inside { }.
+print(f"Welcome to {name} v{version}!");
+print(f"1 + 1 = {1 + 1}");
+
+// String concatenation with '+'.
+str first = "Hello";
+str second = "World";
+str combined = first + ", " + second + "!";
+print(combined);
+
+// (typename)expr is the only conversion syntax -- there is no str()/
+// int()/float()/bool() function call form.
+int number = 7;
+str number_str = (str)number;
+print(f"the number as a string: '{number_str}'");
+
+// Comparing strings with == compares content, not identity.
+str a = "match";
+str b = "match";
+if (a == b) {
+    print("strings compare equal");
+}
+
+// f-strings can nest calls and multiple expressions.
+def str shout(str s) {
+    return s + "!!!";
+}
+str excitement = "exciting";
+str shouted = shout(excitement);
+print(f"{shouted} (len={len(shouted)})");
+// List: ordered, indexable, growable with append().
+list numbers = [10, 20, 30];
+numbers.append(40);
+print(f"numbers has {len(numbers)} items");
+for (n in numbers) {
+    print(f"number: {n}");
+}
+print(f"first number: {numbers[0]}");
+numbers[0] = 99;
+print(f"first number is now: {numbers[0]}");
+
+// Dict: key/value pairs. Indexing reads/writes; 'in' checks membership.
+dict ages = {"alice": 30, "bob": 25};
+str alice_key = "alice";
+print(f"alice is {ages[alice_key]}");
+ages["carol"] = 40;
+if ("carol" in ages) {
+    print("carol was added");
+}
+print(f"there are {len(ages)} people");
+
+// Set: unique unordered values, growable with add().
+set seen = {1, 2, 3};
+seen.add(3);  // already present -- no effect
+seen.add(4);
+print(f"set has {len(seen)} unique values");
+if (4 in seen) {
+    print("4 is in the set");
+}
+if (99 in seen) {
+    print("this won't print");
+} else {
+    print("99 is not in the set");
+}
+// try/except catches runtime errors raised by the runtime library --
+// e.g. list index out of range, dict key not found, division by zero.
+list numbers = [1, 2, 3];
+
+try {
+    print(numbers[10]);
+} except e {
+    print("caught an error indexing the list");
+}
+
+dict ages = {"alice": 30};
+try {
+    print(ages["nobody"]);
+} except e {
+    print("caught an error: key not found");
+}
+
+// Code after a caught exception continues normally.
+print("still running after the try/except blocks");
+
+// A try block that succeeds just runs straight through, except never fires.
+try {
+    int safe = numbers[0];
+    print(f"safely got {safe}");
+} except e {
+    print("this won't print");
+}
+// abs() -- works on int or float, and on 'any' too.
+int neg = -7;
+print(f"abs(-7) = {abs(neg)}");
+
+// min()/max() -- variadic (2+ args); works on numbers or strings.
+print(f"min(3, 9, 1) = {min(3, 9, 1)}");
+print(f"max(3, 9, 1) = {max(3, 9, 1)}");
+str first = "banana";
+str second = "apple";
+print(f"min of two strings = {min(first, second)}");
+
+// pow()/sqrt() -- always return float.
+print(f"2^10 = {pow(2, 10)}");
+print(f"sqrt(16) = {sqrt(16)}");
+
+// round() -- always returns int.
+float value = 3.7;
+print(f"round(3.7) = {round(value)}");
+
+// chr()/ord() -- character <-> code point.
+print(f"chr(65) = {chr(65)}");
+print(f"ord('A') = {ord('A')}");
+
+// sorted() -- returns a new, ascending-sorted list.
+list nums = [5, 1, 4, 2, 3];
+list ordered = sorted(nums);
+for (n in ordered) {
+    print(f"sorted: {n}");
+}
+
+// sum() -- sums a list's elements.
+print(f"sum([1,2,3,4,5]) = {sum([1, 2, 3, 4, 5])}");
+// raise: throws any value as an exception, catchable by try/except.
+def check_positive(int n) {
+    if (n < 0) {
+        raise "n must be positive";
+    }
+    print(f"{n} is positive");
+}
+
+try {
+    check_positive(5);
+    check_positive(-3);
+} except e {
+    print(f"caught: {e}");
+}
+
+// assert cond;  -- raises "assertion failed" if cond is false.
+// assert cond, message;  -- raises message instead.
+def int divide(int a, int b) {
+    assert b != 0, "cannot divide by zero";
+    return a / b;
+}
+
+try {
+    print(f"10 / 2 = {divide(10, 2)}");
+    print(f"10 / 0 = {divide(10, 0)}");
+} except e {
+    print(f"caught: {e}");
+}
+
+// del: removes a list element or dict entry (this is the only form
+// 'del' takes here -- deleting a bare variable isn't meaningful in a
+// compiled, stack-based language the way it is in Python).
+list fruits = ["apple", "banana", "cherry"];
+del fruits[1];
+print(f"fruits now has {len(fruits)} items");
+for (f in fruits) {
+    print(f"fruit: {f}");
+}
+
+dict ages = {"alice": 30, "bob": 25};
+del ages["bob"];
+if ("bob" in ages) {
+    print("this won't print");
+} else {
+    print("bob was removed");
+}
+// open(path, mode) returns a file handle; mode is the same as C's
+// fopen ("r", "w", "a", ...).
+any out_file = open("/tmp/gs_example_output.txt", "w");
+write(out_file, "first line\n");
+write(out_file, "second line\n");
+close(out_file);
+print("wrote a file");
+
+// read() returns the entire remaining contents as one str.
+any in_file = open("/tmp/gs_example_output.txt", "r");
+str contents = read(in_file);
+close(in_file);
+print(f"whole file:\n{contents}");
+
+// read_line() reads one line at a time; eof() checks for end of file.
+any line_file = open("/tmp/gs_example_output.txt", "r");
+while (!eof(line_file)) {
+    str line = read_line(line_file);
+    if (line != "") {
+        print(f"line: {line}");
+    }
+}
+close(line_file);
+
+// opening a file that doesn't exist raises, same as any other runtime error.
+try {
+    any missing = open("/tmp/gs_this_should_not_exist.txt", "r");
+} except e {
+    print(f"caught: {e}");
+}
+// #include "file" splices the entire file's contents in place, like C.
+#include "15_include_lib.gs";
+
+print(f"square(5) = {square(5)}");
+print(f"cube(3) = {cube(3)}");
+
+Greeter g = Greeter();
+g.name = "Guavascript";
+print(g.greeting());
+// A small library file, meant to be #included by other files rather
+// than compiled on its own.
+
+def int square(int n) {
+    return n * n;
+}
+
+def int cube(int n) {
+    return n * n * n;
+}
+
+class Greeter {
+    def __init__(self) {
+        self.name = "World";
+    }
+
+    def str greeting(self) {
+        return f"Hello, {self.name}!";
+    }
+}
+// #include Name from "file" pulls in just one class or function,
+// not the whole file. Optionally rename it with 'as'.
+//
+// Note: extracting a single class only pulls that class's own
+// definition, not anything it depends on (e.g. a parent class) --
+// if 'Greeter' inherited from another class, that parent would also
+// need its own #include.
+
+#include square from "15_include_lib.gs";
+#include Greeter from "15_include_lib.gs" as Welcomer;
+
+print(f"square(6) = {square(6)}");
+// note: cube() was never included, so it isn't available here at all
+
+Welcomer w = Welcomer();
+w.name = "there";
+print(w.greeting());
+tuple t = (1, 2, 3);
+print(t[0]);
+print(t[1]);
+print(t[2]);
+print(len(t));
+
+int x = (5 + 3) * 2;
+print(x);
+tuple single = (7,);
+print(len(single));
+print(single[0]);
+tuple empty = ();
+print(len(empty));
+
+print(2 in t);
+print(9 in t);
+
+int total = 0;
+for (v in t) {
+    total += v;
+}
+print(total);
+
+tuple a = (3, 4);
+tuple b = (3, 4);
+print(a == b);
+tuple c = (3, 5);
+print(a == c);
+
+dict positions = {};
+positions[(1, 2)] = "start";
+positions[(3, 4)] = "end";
+print(positions[(1, 2)]);
+print((1, 2) in positions);
+print((9, 9) in positions);
+list nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+list a = nums[2:5];
+print(a[0]); print(a[1]); print(a[2]); print(len(a));
+
+list b = nums[:3];
+print(len(b)); print(b[0]); print(b[2]);
+
+list c = nums[7:];
+print(len(c)); print(c[0]); print(c[2]);
+
+list d = nums[::-1];
+print(d[0]); print(d[9]);
+
+list e = nums[::2];
+print(len(e)); print(e[0]); print(e[1]); print(e[4]);
+
+list f = nums[-3:];
+print(len(f)); print(f[0]);
+
+list g = nums[:-2];
+print(len(g)); print(g[7]);
+
+list h = nums[100:200];
+print(len(h));
+
+str s = "hello world";
+print(s[0:5]);
+print(s[6:]);
+print(s[::-1]);
+print(s[-5:]);
+
+tuple t = (10, 20, 30, 40, 50);
+tuple ts = t[1:3];
+print(ts[0]); print(ts[1]); print(len(ts));
+
+any anylist = nums;
+any sliced = anylist[2:4];
+print(sliced[0]); print(sliced[1]);
+def str classify(int n) {
+    match (n) {
+        case 1, 2, 3 {
+            return "small";
+        }
+        case 100 {
+            return "hundred";
+        }
+        default {
+            return "other";
+        }
+    }
+}
+print(classify(1));
+print(classify(2));
+print(classify(100));
+print(classify(50));
+
+// match on a string, any-typed subject
+str s = "hello";
+match (s) {
+    case "hi" {
+        print("greeting1");
+    }
+    case "hello" {
+        print("greeting2");
+    }
+    default {
+        print("unknown");
+    }
+}
+
+// match with no default, no case matches -> falls through silently
+int x = 999;
+match (x) {
+    case 1 {
+        print("one");
+    }
+}
+print("after match");
+with open("/tmp/with_test_file.txt", "w") as f {
+    write(f, "hello\n");
+    write(f, "world\n");
+}
+
+with open("/tmp/with_test_file.txt", "r") as f {
+    while (not eof(f)) {
+        str line = read_line(f);
+        print(line);
+    }
+}
+print("done");
+
+// verify cleanup happens even when body raises
+try {
+    with open("/tmp/with_test_file.txt", "r") as f2 {
+        raise "boom";
+    }
+} except e {
+    print(f"caught: {e}");
+}
+print("still running after exception during with");
+write("no");
+write(" newline");
+write(" here\n");
+
+print(floordiv(7, 2));
+print(floordiv(-7, 2));
+print(floordiv(7, -2));
+print(floordiv(-7, -2));
+
+print("before exit");
+exit(3);
+print("never printed");
+class Animal {
+    def __init__(self, str name, int legs = 4) {
+        self.name = name;
+        self.legs = legs;
+    }
+    def speak(self) {
+        print(f"{self.name} says something");
+    }
+}
+class (Animal)Dog {
+    def __init__(self, str name) {
+        super().__init__(name, 4);
+        self.breed = "unknown";
+    }
+    def speak(self) {
+        super().speak();
+        print(f"{self.name} says Woof!");
+    }
+}
+Dog d = Dog("Rex");
+d.speak();
+print(d.legs);
+
+// super() with default-arg forwarding
+class (Animal)Cat {
+    def __init__(self, str name) {
+        super().__init__(name);
+    }
+}
+Cat c = Cat("Whiskers");
+print(c.legs);
+def int total(int base, *rest) {
+    int sum = base;
+    for (v in rest) {
+        sum += v;
+    }
+    return sum;
+}
+print(total(10));
+print(total(10, 1, 2, 3));
+print(total(10, 5));
+
+def void show_all(str label, *items) {
+    print(label);
+    for (v in items) {
+        print(v);
+    }
+}
+show_all("nums:", 1, 2, 3);
+show_all("empty:");
+def int doubler(int x) {
+    return x * 2;
+}
+
+if ((n := doubler(5)) > 5) {
+    print(n);
+}
+
+int i = 0;
+list results = [];
+while ((v := i * i) < 50) {
+    results.append(v);
+    i += 1;
+}
+print(len(results));
+print(results[0]);
+print(results[len(results)-1]);
+
+y := 42;
+print(y);
+
+if ((z := doubler(3)) == 6) {
+    print("matched");
+    print(z);
+} elif ((z := doubler(10)) == 6) {
+    print("never");
+} else {
+    print("else");
+}
+// basic keyword args for plain functions
+def str greet(str name, str greeting = "hello") {
+    return greeting + ", " + name;
+}
+print(greet(name="Sam"));
+print(greet(name="Sam", greeting="hi"));
+print(greet(greeting="yo", name="Alex"));
+print(greet("Bob"));
+print(greet("Bob", "sup"));
+
+// **kwargs collecting leftover keyword args into a dict
+def void show_opts(str label, **opts) {
+    print(label);
+    print(len(opts));
+    print("x" in opts);
+}
+show_opts("test1", x=1, y=2, z=3);
+show_opts("test2");
+
+// constructor with keyword args
+class Point {
+    def __init__(self, int x, int y = 0) {
+        self.x = x;
+        self.y = y;
+    }
+}
+Point p1 = Point(x=5, y=10);
+Point p2 = Point(x=3);
+print(p1.x); print(p1.y);
+print(p2.x); print(p2.y);
+class Animal {
+    def __init__(self, str name) {
+        self.name = name;
+    }
+    def str greet(self) {
+        return "hi, I'm " + self.name;
+    }
+    def int add(self, int a, int b) {
+        return a + b;
+    }
+}
+class (Animal)Dog {
+    def bark(self) {
+        print("woof from " + self.name);
+    }
+}
+class Cat {
+    def __init__(self) {
+        self.name = "cat";
+    }
+    def void bark(self) {
+        print("meow (impersonating a bark)");
+    }
+}
+
+// switching which class gets assigned at runtime
+any x = Dog("Rex");
+x.bark();
+any y = Cat();
+y.bark();
+
+// inherited method (bark's greet comes from Animal, not overridden in Dog)
+any z = Dog("Fido");
+print(z.greet());
+
+// method with args and a return value
+any w = Dog("Buddy");
+print(w.add(3, 4));
+
+// list of mixed any-typed class instances -- the exact case from earlier this session
+list animals = [];
+animals.append(Dog("A"));
+animals.append(Cat());
+animals.append(Dog("B"));
+for (a in animals) {
+    a.bark();
+}
+
+// error case: calling a method that doesn't exist on that class
+any bad = Cat();
+try {
+    bad.add(1, 2);
+} except e {
+    print(f"caught: {e}");
+}
+def summarize(str label, *rest, **opts) {
+    print(label);
+    print("rest count:");
+    print(len(rest));
+    int i = 0;
+    while (i < len(rest)) {
+        print(rest[i]);
+        i = i + 1;
+    }
+    if ("verbose" in opts) {
+        print("verbose:");
+        print(opts["verbose"]);
+    }
+    if ("tag" in opts) {
+        print("tag:");
+        print(opts["tag"]);
+    }
+}
+
+// no extras at all
+summarize("basic");
+
+// *args overflow only
+summarize("with-rest", 1, 2, 3);
+
+// **kwargs only
+summarize("with-kw", verbose=True, tag="x");
+
+// both *args overflow AND **kwargs together -- this is the combo that was broken
+summarize("combo", 10, 20, verbose=False, tag="y");
+
+def add_all(*nums) {
+    int total = 0;
+    int i = 0;
+    while (i < len(nums)) {
+        total = total + nums[i];
+        i = i + 1;
+    }
+    return total;
+}
+print("sum:");
+print(add_all(1, 2, 3, 4, 5));
+// Constructors previously forwarded call args 1:1 with no *args/**kwargs
+// packing at all -- this broke the instant a constructor declared *args,
+// even with no **kwargs involved. Fixed alongside the plain-function-call
+// *args+**kwargs combo fix, both now share the same codegen helper.
+
+class Bag {
+    def __init__(self, str label, *items) {
+        self.label = label;
+        self.items = items;
+    }
+}
+Bag b1 = Bag("empty");
+Bag b2 = Bag("mybag", 1, 2, 3);
+print(b1.label);
+print(len(b1.items));
+print(b2.label);
+print(len(b2.items));
+print(b2.items[0]);
+print(b2.items[2]);
+
+class Profile {
+    def __init__(self, str name, *tags, **info) {
+        self.name = name;
+        self.tags = tags;
+        self.info = info;
+    }
+}
+Profile p1 = Profile("basic");
+Profile p2 = Profile("full", "admin", "verified", role="lead", team="core");
+print(p1.name);
+print(len(p1.tags));
+print(len(p1.info));
+print(p2.name);
+print(len(p2.tags));
+print(p2.tags[0]);
+print(p2.tags[1]);
+print(p2.info["role"]);
+print(p2.info["team"]);
+class Animal {
+    def __init__(self, str name) {
+        self.name = name;
+    }
+    def speak(self) {
+        return "...";
+    }
+}
+
+class (Animal)Dog {
+    def speak(self) {
+        return "Woof";
+    }
+}
+
+class (Animal)Cat {
+    def speak(self) {
+        return "Meow";
+    }
+}
+
+class (Dog)Puppy {
+}
+
+Dog d = Dog("Rex");
+Cat c = Cat("Tom");
+Puppy p = Puppy("Spot");
+
+// statically-typed class values
+print(isinstance(d, Dog));      // True
+print(isinstance(d, Animal));   // True (base class)
+print(isinstance(d, Cat));      // False (unrelated)
+print(isinstance(p, Dog));      // True (Puppy extends Dog)
+print(isinstance(p, Animal));   // True (grandparent)
+print(isinstance(d, Puppy));    // False (d isn't a Puppy, wrong direction)
+
+// any-typed values holding objects
+any a1 = Dog("AnyRex");
+any a2 = Cat("AnyTom");
+print(isinstance(a1, Dog));     // True
+print(isinstance(a1, Animal));  // True
+print(isinstance(a1, Cat));     // False
+print(isinstance(a2, Animal));  // True
+print(isinstance(a2, Dog));     // False
+
+// any-typed value NOT holding an object at all
+any a3 = 42;
+print(isinstance(a3, Dog));     // False, no crash
+
+// statically non-object types -- always False, no error
+int n = 5;
+str s = "hi";
+print(isinstance(n, Dog));      // False
+print(isinstance(s, Animal));   // False
+
+// isinstance used in a real conditional
+def str describe(any x) {
+    if (isinstance(x, Dog)) {
+        return "it's a dog";
+    } elif (isinstance(x, Animal)) {
+        return "it's some animal";
+    } else {
+        return "not an animal";
+    }
+}
+print(describe(a1));
+print(describe(a2));
+print(describe(a3));
+class MathUtils {
+    @staticmethod
+    def int square(int x) {
+        return x * x;
+    }
+
+    @staticmethod
+    def int add(int a, int b) {
+        return a + b;
+    }
+
+    def int instance_method(self, int x) {
+        return x + 1;
+    }
+}
+
+// called via ClassName.method(args) -- the unbound style
+print(MathUtils.square(5));
+print(MathUtils.add(3, 4));
+
+// called via instance.method(args) -- same static method, no receiver passed
+MathUtils m = MathUtils();
+print(m.square(6));
+print(m.add(10, 20));
+
+// mixing static and instance methods on the same instance
+print(m.instance_method(41));
+
+class (MathUtils)ExtendedMath {
+    @staticmethod
+    def int cube(int x) {
+        return x * x * x;
+    }
+}
+
+// inherited static method, called both ways
+print(ExtendedMath.square(7));
+ExtendedMath e = ExtendedMath();
+print(e.square(8));
+print(e.cube(3));
+print(ExtendedMath.cube(4));
+
+// static method through 'any'-typed dynamic dispatch
+any a = MathUtils();
+print(a.square(9));
+print(a.add(1, 2));
+
+any ext = ExtendedMath();
+print(ext.cube(5));
+print(ext.square(10));
+
+// side-effect preservation: calling a static method off a side-effecting
+// expression should still run that expression, even though its result
+// isn't passed anywhere
+int counter = 0;
+def MathUtils bump() {
+    counter = counter + 1;
+    return MathUtils();
+}
+print(bump().square(2));
+print(counter);
